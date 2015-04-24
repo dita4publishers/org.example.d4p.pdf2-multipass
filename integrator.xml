@@ -1,0 +1,63 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<project name="org.example.d4p.pdf2-multipass">
+  <target name="dita2ex-pdf2-mp.init">
+    
+    <property name="axf.formatter.output-format" value="@AreaTree" />
+    <property location="${dita.plugin.org.example.d4p.pdf2-multipass.dir}/cfg" name="customization.dir" />
+  </target>
+  <target depends="dita2ex-pdf2-mp.init, dita2pdf2" name="dita2ex-pdf2-mp" />
+  
+  <!-- We have to test for transtype otherwise the target selected by the "depend.org.dita.pdf2.format.post"
+    extension point will be activated for every transform that uses that extension hook. -->
+  <condition property="ex-pdf2-mp.transtype.test">
+    <or>
+      <equals arg1="${transtype}" arg2="ex-pdf2-mp" />
+    </or>
+  </condition>
+  
+  <target name="ex-pdf2-mp-fixup-areatree" if="ex-pdf2-mp.transtype.test">
+    <!-- We will put the fixed up area tree in the output directory because that's where the original
+      area tree is -->
+	  
+    <echo>mp folios: ${mpDoDropFolios}</echo>
+    <xslt in="${dita.map.output.dir}/${outputFile.base}${xsl.formatter.ext}" out="${dita.map.output.dir}/${outputFile.base}.AT.final.xml" style="${dita.plugin.org.example.d4p.pdf2-multipass.dir}/areatree/fixup.xsl">
+      <param name="mpManifests.dir.uri" expression="${pdf2.temp.dir}/mpManifests"  />   
+      <param name="mpDoDropFolios" expression="${args.mpDoDropFolios}"  />   
+      <param name="debug" expression="${args.debug}"/>
+      <xmlcatalog>
+        <catalogpath path="${xml.catalog.files}"></catalogpath>
+      </xmlcatalog>
+    </xslt>
+    <exec executable="${axf.cmd}" resultproperty="errCode" logerror="true">
+      <arg value="-d"/>
+      <arg value="${dita.map.output.dir}/${outputFile.base}.AT.final.xml"/>
+      <arg value="-o"/>
+      <arg value="${dita.map.output.dir}/${outputFile.base}.pdf"/>
+      <arg value="-p"/>
+      <arg value="@PDF"/>
+      <arg value="-extlevel"/>
+      <arg value="4"/>
+      <arg value="-peb"/>
+      <arg value="1"/>
+    </exec>
+    
+    <antcall target="ex-pdf2-mp-delete-AT-output"/>
+  </target>
+  
+  <!-- Now test to see if args.debug is true (or any of the commonly accepted D4P/D-C values for
+    $debug) -->
+  <condition property="ex-pdf2-mp.args-debug.istrue.test">
+    <or>
+      <equals arg1="${args.debug}" arg2="true" />
+      <equals arg1="${args.debug}" arg2="1" />
+      <equals arg1="${args.debug}" arg2="on" />
+      <equals arg1="${args.debug}" arg2="yes" />
+    </or>
+  </condition>
+  
+  <!-- if args.debug is not equivalent to true, then delete the areatree that we generated -->
+  <target name="ex-pdf2-mp-delete-AT-output" unless="ex-pdf2-mp.args-debug.istrue.test">
+    <delete file="${outputFile}" />
+    <delete file="${dita.map.output.dir}/${outputFile.base}.AT.final.xml"/>
+  </target>
+</project>

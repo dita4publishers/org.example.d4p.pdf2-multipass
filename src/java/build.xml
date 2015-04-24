@@ -1,0 +1,110 @@
+<project name="pdf2-multipass-helper-build"  
+  
+  default="dist-helper-jar" basedir=".">
+
+  <property file="build.properties"/>
+  <property file="${user.home}/.build.properties"/>
+	<property file="${user.home}/build.properties"/>
+	
+  <property name="dist" location="${basedir}/dist"/>
+  <property name="lib" location="${basedir}/java/lib"/>
+  <property name="src" location="${basedir}/src"/>
+  <property name="temp" location="${basedir}/temp"/>
+  
+  <property name="pdf2MultipassHelperDeployDir" value="blah" />
+	    
+  <property name="jar.basename" value="pdf2-multipass-helper" />
+  
+  <property name="lib.home" value="${lib}" />
+  <property name="src.home" value="${basedir}/src" />
+  <property name="src.java.home" value="${src.home}" />
+
+  <property name="target.home" value="${dist}/target"/>
+  <property name="target.jar" value="${jar.basename}.jar"/>
+  
+  <property name="classes.home" value="${target.home}/classes"/>
+	
+  <path id="classpath.base">
+    <pathelement path="${classes.home}"/>
+    <fileset dir="${lib.home}">
+        <include name="*.jar"/>
+    </fileset>
+  </path>
+
+  <target name="init">
+    <tstamp/>
+  </target>
+
+  <tstamp>
+		<format property="package.date" pattern="yyyy-MM-dd"/>
+	</tstamp>
+  
+  <!-- begin deployment targets -->
+  <target name="dist-deploy-helper">
+    <antcall target="dist-helper-jar"></antcall>
+    <antcall target="deployHelperPlugin"></antcall>
+  </target>
+  
+  <target name="deployHelperPlugin">
+    <fail message="Cannot find expected plugin in ${dist}">
+      <condition>
+        <not>
+          <available file="${dist}/${target.jar}" />
+        </not>
+      </condition>
+    </fail>
+    <fail message="Cannot find expected plugins directory in ${pdf2MultipassHelperDeployDir}.">
+      <condition>
+        <not>
+          <available file="${pdf2MultipassHelperDeployDir}" type="dir" />
+        </not>
+      </condition>
+    </fail>
+    <copy file="${dist}/${target.jar}" todir="${pdf2MultipassHelperDeployDir}" failonerror="true"/>
+    <delete file="${dist}/${target.jar}"/>
+  </target>
+  
+  <target name="dist-helper-jar" description="Create distribution of the helper java library"
+    depends="package-helper">
+    <copy file="${target.home}/${target.jar}" todir="${dist}"/>
+    <delete failonerror="false" dir="${basedir}/target"/>
+    <mkdir dir="${basedir}/target" />		
+    <antcall target="clean" />
+  </target>
+  
+  <target name="compile" depends="init">
+    
+    <delete dir="${classes.home}" />
+    
+    <mkdir dir="${classes.home}"/>
+    <javac       
+      srcdir="${src.java.home}"
+      destdir="${classes.home}"
+      debug="on"
+      deprecation="on">
+      <classpath refid="classpath.base"/>
+    	
+    </javac>    
+  </target>
+	
+  <target name="package-helper" depends="clean, compile">
+    <jar destfile="${target.home}/${target.jar}" >
+      <fileset dir="${classes.home}" >
+        <include name="**.*" />
+        <include name="**/**.*" />
+        <exclude name="**/log4j.properties"/>
+      </fileset>
+    </jar>
+  </target>
+  	
+	<target name="dist-init">
+		<delete failonerror="false" dir="${dist}"/>
+		<mkdir dir="${dist}"/>
+		<mkdir dir="${package.dist}"/>
+  </target>
+	
+  <target name="clean">
+    <delete failonerror="false" dir="${target.home}"/>
+  </target>
+  
+</project>

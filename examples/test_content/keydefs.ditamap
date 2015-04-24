@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE map PUBLIC "-//OASIS//DTD DITA Map//EN" "map.dtd">
+<map>
+ <title>Keys for Example D4P PDF2 MultiPass Map</title>
+  
+  <keydef keys="table_test" href="TableTest.dita" />
+</map>

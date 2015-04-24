@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<params>
+    <!-- Capture args.debug as debug param since pdf2 doesn't seem to -->
+    <param name="debug" expression="${args.debug}"/>
+	
+	<!-- Because the PDF2 plugin does not honor the classpath extension point, add the relevant java libraries to the classpath -->	
+	<path id="d4p-mp2.path">
+		<pathelement location="${dita.plugin.org.example.d4p.pdf2-multipass.dir}/lib/pdf2-multipass-helper.jar"></pathelement>
+		<pathelement location="${dita.plugin.org.example.d4p.pdf2-multipass.dir}/lib/XfoJavaCtl.jar"></pathelement>
+	</path>
+	<classpath refid="d4p-mp2.path"></classpath>
+	
+</params>

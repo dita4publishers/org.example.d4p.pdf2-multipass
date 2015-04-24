@@ -1,0 +1,9 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<plugin id="org.example.d4p.pdf2-multipass">
+  <require plugin="org.dita.pdf2" />
+  <feature extension="dita.conductor.pdf2.param" value="plugins/org.example.d4p.pdf2-multipass/ant-parameters.xml" />
+  <feature extension="dita.conductor.transtype.check" value="ex-pdf2-mp" />
+  <feature extension="dita.transtype.print" value="ex-pdf2-mp" />
+  <feature extension="dita.conductor.target.relative" file="integrator.xml" />
+  <feature extension="depend.org.dita.pdf2.format.post" value="ex-pdf2-mp-fixup-areatree"/>
+</plugin>
