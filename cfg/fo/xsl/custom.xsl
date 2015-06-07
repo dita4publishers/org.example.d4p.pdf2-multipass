@@ -41,7 +41,15 @@
       <xsl:message>+ [DEBUG] the d4pFloatId is [<xsl:value-of select="$curFloatId"/>]</xsl:message>
     </xsl:if>
     
-    <fo:float axf:float="page top">
+    <fo:float>
+      <xsl:choose>
+        <xsl:when test="@outputclass=('floatBottom')">
+          <xsl:attribute name="axf:float">page bottom</xsl:attribute>
+        </xsl:when>
+        <xsl:otherwise>
+          <xsl:attribute name="axf:float">page top</xsl:attribute>
+        </xsl:otherwise>
+      </xsl:choose>
       
       <xsl:attribute name="role"
         select="
