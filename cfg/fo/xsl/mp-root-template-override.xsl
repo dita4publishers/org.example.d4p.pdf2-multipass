@@ -131,6 +131,28 @@
       </xsl:apply-templates>
     </xsl:variable>
     
+    <xsl:variable name="curFloatFoFile"
+      select="concat($work.dir.url,'mpManifests/afterAllFloats/topic.fo')" as="xs:string"/>
+    <xsl:variable name="inputFoFile" as="xs:string"
+      select="replace($curFloatFoFile,'file:/','')"/>
+    <xsl:variable name="outputAtFile" as="xs:string"
+      select="replace(replace($curFloatFoFile,'.fo','.AT.xml'),'file:/','')"/>
+    
+    <xsl:result-document href="{$curFloatFoFile}">
+      <xsl:sequence select="$foRootElem"/>
+    </xsl:result-document>
+    
+    <xsl:message terminate="no">+ [INFO] Result of RenderAreaTree#ExecuteAxf: [<xsl:value-of select="pdf2MultipassHelperRenderAreaTree:ExecuteAxf($inputFoFile,$outputAtFile)"/>]</xsl:message>
+    
+    <xsl:variable name="areaTreeForFo" select="document(concat('file:/',$outputAtFile))" as="document-node()?"/>
+    
+    <xsl:variable name="foRootElem" as="element(fo:root)">
+      <xsl:apply-templates select="$foRootElem" mode="pdf2Multipass:afterAllFloats-fixup">
+        <xsl:with-param name="doDebug" as="xs:boolean" tunnel="yes" select="$debugBoolean"/>
+        <xsl:with-param name="areaTreeForFo" as="document-node()?" tunnel="yes" select="$areaTreeForFo"/>
+      </xsl:apply-templates>
+    </xsl:variable>
+    
     <xsl:sequence select="$foRootElem"/>
     
   </xsl:template>
