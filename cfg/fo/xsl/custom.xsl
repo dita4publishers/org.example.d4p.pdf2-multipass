@@ -18,12 +18,19 @@
   <xsl:include href="mp-root-template-override.xsl"/>
   <xsl:include href="mp-layout-masters-fixup.xsl"/>
   <xsl:include href="mp-floats-fixup.xsl"/>
+  <xsl:include href="mp-afterAllFloats-fixup.xsl"/>
   
   <xsl:param name="debug" select="'false'" as="xs:string" />
   
   <xsl:variable name="debugBoolean" 
     select="matches($debug,'true|1|on|yes', 'i')" as="xs:boolean"
   />
+  
+  <xsl:template match="*[contains(@class,' topic/bodydiv ')][contains(@outputclass,'afterAllFloats')]">
+    <fo:block role="afterAllFloats">
+      <xsl:apply-templates/>
+      </fo:block>
+  </xsl:template>
   
   <!-- template override for similar template in org.dita.pdf2:xsl:fo/tables.xsl;
   override accomplishes two things:
