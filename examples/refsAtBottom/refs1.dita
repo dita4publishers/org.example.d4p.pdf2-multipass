@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE topic PUBLIC "-//OASIS//DTD DITA Topic//EN" "topic.dtd">
+<topic id="topic_wlk_vqc_yr">
+  <title>Refs at Bottom</title>
+  <body>
+    <p>Wellstone is my cat.</p>
+    <fig>
+    
+    <image href="pic.jpg" placement="break" />
+  </fig>
+    <table outputclass="floatBottom">
+      <title>A table</title>
+      <tgroup cols="3">
+        <tbody>
+          <row>
+            <entry>Yo.</entry>
+            <entry>App.</entry>
+            <entry>Say what?</entry>
+          </row>
+        </tbody>
+      </tgroup>
+    </table>
+    <table>
+      <title>A table 2</title>
+      <tgroup cols="3">
+        <tbody>
+          <row>
+            <entry>Yo.</entry>
+            <entry>App.</entry>
+            <entry>Say what?</entry>
+          </row>
+        </tbody>
+      </tgroup>
+    </table>
+    <bodydiv outputclass="afterAllFloats">  
+      <p outputclass="ref">Calderwood, Steven. 2015. Barcelona was in May.</p>
+    </bodydiv>
+  </body>
+</topic>
